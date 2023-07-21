@@ -1,0 +1,30 @@
+name: 'Build & Release'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - stable
+    tags:
+      - "release/*"
+  pull_request:
+
+jobs:
+  build-release:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Setup Zig
+        uses: goto-bus-stop/setup-zig@v2.1.1
+        with:
+          version: 0.11.0-dev.4059+17255bed4
+
+      - name: Build
+        run: |
+          ls -al lib
+          ls -al lib/*
+          zig build -Doptimize=ReleaseSafe
