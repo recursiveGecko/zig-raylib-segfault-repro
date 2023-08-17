@@ -1,10 +1,9 @@
 const std = @import("std");
 const raylib = @import("lib/raylib/build.zig");
-const raygui = @import("lib/raygui/build.zig");
 
 pub fn build(b: *std.Build) !void {
     const optimize = b.standardOptimizeOption(.{});
-    const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "x86_64-windows-gnu" });
+    const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "x86_64-windows" });
 
     const exe = b.addExecutable(.{
         .name = "zig-raylib-playground",
@@ -12,8 +11,8 @@ pub fn build(b: *std.Build) !void {
         .target = target,
         .optimize = optimize,
     });
+    exe.linkLibC();
     raylib.addTo(b, exe, target, optimize);
-    raygui.addTo(b, exe, target, optimize);
 
     b.installArtifact(exe);
     const run_cmd = b.addRunArtifact(exe);
